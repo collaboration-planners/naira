@@ -25,6 +25,10 @@ defmodule Naira.Mixfile do
   #
   # Type `mix help deps` for more examples and options
   defp deps do
-    []
+    [{:timex, "~>0.13.1"}, 
+		 {:geo, "~> 0.8.0"},
+#		 { :uuid, "~> 0.1.5" }, 
+		 {:amnesia, github: "meh/amnesia", tag: :master}
+		]
   end
 end

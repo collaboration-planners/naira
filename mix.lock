@@ -1,0 +1,9 @@
+%{"amnesia": {:git, "git://github.com/meh/amnesia.git", "07a30a73ce71e03e56daa7a2855161d81ba20c48", [tag: :master]},
+  "continuum": {:git, "git://github.com/meh/continuum.git", "4125f9d428971568f16da78cec24fddce18d6eca", []},
+  "decimal": {:hex, :decimal, "0.2.5"},
+  "exquisite": {:hex, :exquisite, "0.1.4"},
+  "geo": {:hex, :geo, "0.8.0"},
+  "jazz": {:hex, :jazz, "0.2.1"},
+  "postgrex": {:hex, :postgrex, "0.6.0"},
+  "timex": {:hex, :timex, "0.13.1"},
+  "uuid": {:hex, :uuid, "0.1.5"}}
