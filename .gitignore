@@ -1,3 +1,5 @@
+/#mix.exs#
+/.#mix.exs
 /_build
 /deps
 erl_crash.dump
