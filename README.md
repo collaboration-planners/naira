@@ -1,4 +1,6 @@
+=======
 Naira
-=====
+======
 
-** TODO: Add description **
+An event streaming micro-service built on trust
+
