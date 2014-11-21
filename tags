@@ -1,0 +1,3 @@
+#!/bin/sh
+find . -name *.ex -print | etags -
+echo "TAGS built"

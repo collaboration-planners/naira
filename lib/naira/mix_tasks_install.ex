@@ -24,18 +24,6 @@ Mix task for starting the Mnesia db
     # This waits for the database to be fully created.
     DB.wait
 
-    Amnesia.transaction do
-      # ... initial data creation
-			new_user = User.add("jf@collaboration-planners.com", "jf", "1234")
-		  IO.puts "Added #{inspect new_user}"
-			new_report = User.report_event(new_user, "Boom!")
-			IO.puts "Added #{inspect new_report}"
-			EventReport.set_description(new_report, "An explosion")
-		  selection = EventReport.where user_id == new_user.id, select: [id, headline, description]
-			reports = selection |> Amnesia.Selection.values |> Enum.map fn [id, headline, description] -> {id, headline, description} end
-			IO.puts "Event reports of #{new_user.name}: #{inspect reports}"
-    end
-
     # Stop mnesia so it can flush everything and keep the data sane.
     Amnesia.stop
 		IO.puts "DB installed!"
