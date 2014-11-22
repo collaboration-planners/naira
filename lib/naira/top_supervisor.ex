@@ -7,7 +7,7 @@ Naira's top supervisor.
 
   def start_link() do
 		IO.puts "Starting top supervisor"
-		{:ok, _pid} = Supervisor.start_link(@name, [])
+		{:ok, _pid} = Supervisor.start_link(@name, [], [name: @name])
 	end 
 
 	def init(_) do

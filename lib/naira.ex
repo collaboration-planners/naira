@@ -1,17 +1,26 @@
 defmodule Naira do
-	@moduledoc """
-The Naira OTP application
-"""
-	use Application
+  use Application
 
-	def start(_type, _args) do
-		IO.puts "Starting Naira application"
+  # See http://elixir-lang.org/docs/stable/elixir/Application.html
+  # for more information on OTP Applications
+def start(_type, _args) do
+    import Supervisor.Spec, warn: false
+		Application.start :logger
 		:ok = Amnesia.start
 		IO.puts "Mnesia started"
-		{:ok, pid} = Naira.TopSupervisor.start_link()
+
+    children = [
+      # Define workers and child supervisors to be supervised
+       supervisor(Naira.TopSupervisor, [])
+    ]
+
+    # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
+    # for other strategies and supported options
+    opts = [strategy: :one_for_one, name: Phoenix.Supervisor]
+    {:ok, pid} = Supervisor.start_link(children, opts)
     initialize_db
 		{:ok, pid}
-	end
+  end
 
 	defp initialize_db() do
 		Naira.EventStreamDefService.add_universal_event_stream_def
@@ -21,5 +30,4 @@ The Naira OTP application
 	def stop(_) do
 		Amnesia.stop
   end
-
 end

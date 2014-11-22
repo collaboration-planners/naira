@@ -3,6 +3,8 @@
 Naira is a microservice for event reporting and streaming that relies on 
 trusted networks of sources. It can be extended via plugins.
 
+Naira is implemented in Elixir.
+
 Naira means _"big eyes"_ in the Quechua and Aymara (Native American) languages.
 
 ## Status
@@ -167,3 +169,11 @@ About streams
 ## Notifications
 * Subscribe to a stream
 * External app receives events as JSON-encoded notifications while subscribed to an event stream
+
+## Starting Naira
+To start your new Phoenix application:
+
+1. Install dependencies with `mix deps.get`
+2. Start Phoenix router with `mix phoenix.start`
+
+Now you can visit `localhost:4000` from your browser.

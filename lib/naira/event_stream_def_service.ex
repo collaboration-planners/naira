@@ -5,12 +5,14 @@ defmodule Naira.EventStreamDefService do
   """
 	use DB
 
+  # API
+
   def add_universal_event_stream_def() do
 		EventStreamDef.add universal_event_stream_def
   end
 
 	def add_user_event_stream_def(user) do
-		EventStreamDef.add user_event_stream_def user.id
+		EventStreamDef.add user_event_stream_def user
 	end
 
 	def get_all_event_stream_defs() do
@@ -23,13 +25,11 @@ defmodule Naira.EventStreamDefService do
 			EventStreamDef.get_all(user_id: user.id)
   end
 
-	### PRIVATE
-
-	defp user_event_stream_def(user_id) do
-		%EventStreamDef{foundational: true, shared: true, user_id: user_id, source_streams: [], filters: []}
+	def user_event_stream_def(user) do
+		%EventStreamDef{foundational: true, shared: true, user_id: user.id, source_streams: [], filters: []}
 	end
 
-  defp universal_event_stream_def() do
+  def universal_event_stream_def() do
 		%EventStreamDef{foundational: true, shared: true, user_id: 0, source_streams: [], filters: []}
 	end
 

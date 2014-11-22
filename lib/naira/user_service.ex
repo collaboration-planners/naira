@@ -6,9 +6,13 @@ defmodule Naira.UserService do
   @naira_id 1
 
 	def get_all_users() do
-     Amnesia.transaction do
-			 User.keys |> Enum.map &User.read(&1)
-     end 
+    Amnesia.transaction do
+			User.keys |> Enum.map &User.read(&1)
+    end 
+  end
+
+	def get_user_naira() do
+		get_user_with_id @naira_id
   end
 
 	def get_user_with_email(email) do
@@ -33,8 +37,8 @@ defmodule Naira.UserService do
 			Naira.EventManager.user_added added_user
 			added_user
     else
-			 IO.puts "User with email #{email} already exists"
-			 stored_user
+			IO.puts "User with email #{email} already exists"
+			stored_user
     end
   end
 

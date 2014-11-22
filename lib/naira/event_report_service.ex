@@ -4,6 +4,8 @@ Event report service.
 """
 	use DB
 
+	# API 
+
 	def add_event_report([user_id: user_id, headline: headline, description: description]) do
 		event_report = event_report(user_id: user_id, headline: headline, description: description)
 		Naira.EventManager.event_report_added event_report
@@ -14,6 +16,4 @@ Event report service.
 		%EventReport{user_id: user_id, headline: headline, description: description, date: Timex.Date.epoch(:secs), tags: [], refs: [] }
   end
 
-	#TODO getting a user's event reports
-  #TODO ... within a window
 end

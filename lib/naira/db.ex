@@ -30,11 +30,7 @@ defdatabase DB do
 			end
     end
     def get([id: id]) do
-			result = Amnesia.transaction do User.read(id) end
-			case result do
-				[user] -> user
-									_ -> nil
-			end
+		  Amnesia.transaction do User.read(id) end
     end
 
 	end

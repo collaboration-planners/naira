@@ -17,7 +17,7 @@ def init(_) do
 end
 
 def start_event_stream(event_stream_def) do
-	Supervisor.start_child(@name, [event_stream_def]) # returns {:ok, pid} -- pid of EventStreamer
+	Supervisor.start_child(@name, [event_stream_def]) # returns {:ok, pid} -- pid of EventStream agent
 end
 
 end
