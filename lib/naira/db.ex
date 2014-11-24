@@ -11,8 +11,10 @@ defdatabase DB do
 			Amnesia.transaction do
 				if not exists self  do
 					User.write self 
+					User.last
 				else
           IO.puts "User with email #{self.email} already exists"
+					nil
         end
 			end
       self
@@ -33,23 +35,47 @@ defdatabase DB do
 		  Amnesia.transaction do User.read(id) end
     end
 
+		def destroy(id) do
+			Amnesia.transaction do User.delete id end
+    end
+
 	end
 
-	deftable EventReport, [{:id, autoincrement}, :user_id, :headline, :description, :tags, :location, :date, :refs], type: :ordered_set, index: [:date]  do
+	deftable EventReport, [{:id, autoincrement}, :user_id, :headline, :description, :tags, :location, :date, :refs], type: :ordered_set, index: [:date, :user_id]  do
 		#		@type t :: %Naira.EventReport{}
 
 		def add(self) do
-			Amnesia.transaction do EventReport.write self end
-      self
+			Amnesia.transaction do 
+				EventReport.write self
+				EventReport.last
+			end
 		end
+
+		def get_all() do
+			Amnesia.transaction do EventReport.stream |> Enum.to_list end
+		end
+
+		def get(id) do
+			Amnesia.transaction do EventReport.read id  end
+    end
+
+		def get_all(user_id) do
+			Amnesia.transaction do EventReport.read_at(user_id, :user_id) end
+    end
+
+		def destroy(id) do
+			Amnesia.transaction do EventReport.delete id end
+    end
 
   end
 
 	deftable EventStreamDef, [{:id, autoincrement}, :foundational, :user_id, :shared, :source_streams, :filters], type: :set, index: [:user_id] do
 
 		def add(self) do
-			Amnesia.transaction do EventStreamDef.write self end
-      self
+			Amnesia.transaction do 
+				EventStreamDef.write self 
+				EventStreamDef.last
+			end
 	  end
 
     def get_all([user_id: user_id]) do

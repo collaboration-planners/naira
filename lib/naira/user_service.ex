@@ -42,6 +42,11 @@ defmodule Naira.UserService do
     end
   end
 
+ def destroy_user(id) do
+	 User.destroy id
+   # TODO raise event?
+end
+
 	def is_naira(user) do
 		user.id == @naira_id
   end
