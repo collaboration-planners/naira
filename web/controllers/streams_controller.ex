@@ -13,10 +13,10 @@ defmodule Naira.StreamsController do
 
   def create(conn, %{"user" => s_user_id}) do
 		user_id = String.to_integer s_user_id
-		user = UserService.get_user_with_id user_id
+		user = Naira.UserService.get_user_with_id user_id
     if user !== nil do
-			pid = Naira.EventStreamService.user_event_stream user
-			json conn, JSON.encode! %{pid: pid}
+			s_pid = Naira.EventStreamService.user_event_stream(user) |> pid_to_string
+			json conn, JSON.encode! %{pid: s_pid}
     else
 			json conn, JSON.encode! nil
     end

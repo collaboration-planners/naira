@@ -3,13 +3,12 @@ defmodule Naira.EventStreamService do
 Event report stream as supervised agent.
 """
 
-	# Supervisor callbacks
+	# API
 
+	# Called by supervisor
 	def start_link(event_stream_def) do # state is an EventStream
 		Agent.start_link(fn -> Naira.EventStream.start(event_stream_def) end) # returns {:ok, pid}
 	end
-
-	# API
 
 	def universal_event_stream() do
 		event_stream_def = Naira.EventStreamDefService.universal_event_stream_def

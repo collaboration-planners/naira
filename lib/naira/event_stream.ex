@@ -2,15 +2,13 @@ defmodule Naira.EventStream do
 	@moduledoc """
 A cyclic event report stream based on an event report def.
 """
-	#TODO - Implement the Stream protocol
-
 
   use DB
 	@derive Access
 
 	defstruct event_stream_def: nil, current: nil
 
-	def start(event_stream_def) do
+	def start(event_stream_def) do  #returns an EventStream
 		event_stream = new event_stream_def
     advance event_stream
   end
