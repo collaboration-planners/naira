@@ -30,4 +30,8 @@ def start(_type, _args) do
 	def stop(_) do
 		Amnesia.stop
   end
+
+	def start_phoenix() do
+		Mix.Tasks.Phoenix.Start.run []
+	end
 end

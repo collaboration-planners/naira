@@ -26,7 +26,7 @@ Event report stream as supervised agent.
 	end
 
 	def stop(pid) do
-		:ok = Agent.stop(pid)
+		Agent.stop(pid)
 	end
 
   # PRIVATE
