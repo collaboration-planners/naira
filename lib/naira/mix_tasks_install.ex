@@ -1,10 +1,12 @@
 defmodule Mix.Tasks.DB.Install do
-	@moduledoc """
-Mix task for starting the Mnesia db
-"""
+
   use Mix.Task
   use DB
 
+  @shortdoc "Initialize the Mnesia db"
+  @moduledoc """
+  Mix task for starting the Mnesia db
+  """
   def run(_) do
     # This creates the mnesia schema, this has to be done on every node before
     # starting mnesia itself, the schema gets stored on disk based on the
