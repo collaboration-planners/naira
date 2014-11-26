@@ -172,6 +172,7 @@ About streams
 
 ## Starting Naira
 
-Start Phoenix router with `mix phoenix.start`
+The first time you run Naira you will need to initialize the database using `mix dB.install`.
+Then start Phoenix router with `mix phoenix.start`
 
 Now you can visit `localhost:4000` from your browser.
