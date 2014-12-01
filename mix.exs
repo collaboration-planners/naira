@@ -26,6 +26,7 @@ defmodule Naira.Mixfile do
      {:cowboy, "~> 1.0"},
 		 {:timex, "~>0.13.1"}, 
 		 {:geo, "~> 0.8.0"},
-		 {:amnesia, github: "meh/amnesia", tag: :master}]
+		 {:amnesia, github: "meh/amnesia", tag: :master},
+		 {:uuid, "~> 0.1.5"}]
   end
 end

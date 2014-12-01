@@ -13,6 +13,7 @@ Naira's top supervisor.
 	def init(_) do
 		children = [
 								 worker(Naira.EventManager, []),
+								 worker(Naira.AtomPool, []),
 								 supervisor(Naira.StreamsSupervisor, [])
 						   ]
 		opts = [strategy: :one_for_one]

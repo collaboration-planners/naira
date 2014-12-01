@@ -20,8 +20,9 @@ end
 
 # API
 
-def start_event_stream(event_stream_def) do
-	Supervisor.start_child(@name, [event_stream_def]) # returns {:ok, pid} -- pid of EventStream agent
+def start_event_stream(name, event_stream_def) do
+	IO.puts "Starting event stream #{name}"
+	Supervisor.start_child(@name, [name, event_stream_def])
 end
 
 end

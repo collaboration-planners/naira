@@ -5,9 +5,9 @@ defmodule Naira.StreamsController do
 	plug :action
 
 
-  def show(conn, %{"id" => s_pid}) do
-		pid = string_to_pid s_pid
-		next = Naira.EventStreamService.next pid
+  def show(conn, %{"id" => s_name}) do
+		name = String.to_atom s_name
+		next = Naira.EventStreamService.next name
 		json conn, JSON.encode! next
 	end
 
@@ -15,30 +15,21 @@ defmodule Naira.StreamsController do
 		user_id = String.to_integer s_user_id
 		user = Naira.UserService.get_user_with_id user_id
     if user !== nil do
-			s_pid = Naira.EventStreamService.user_event_stream(user) |> pid_to_string
-			json conn, JSON.encode! %{pid: s_pid}
+			name = Naira.EventStreamService.user_event_stream(user)
+			json conn, JSON.encode! %{stream: name}
     else
 			json conn, JSON.encode! nil
     end
   end
   def create(conn, %{"universal" => _}) do
-		s_pid =  Naira.EventStreamService.universal_event_stream |> pid_to_string
-		json conn, JSON.encode! %{pid: s_pid}
+		name =  Naira.EventStreamService.universal_event_stream
+		json conn, JSON.encode! %{stream: name}
   end
 
-	def destroy(conn, %{"id" => s_pid}) do
-		pid = string_to_pid s_pid
-		result = Naira.EventStreamService.stop pid
+	def destroy(conn, %{"id" => s_name}) do
+		name = String.to_atom s_name
+		result = Naira.EventStreamService.stop name
 		json conn, JSON.encode! result
   end
 
-	defp string_to_pid(s_pid) do
-		[p1,p2,p3] = String.split s_pid, "."
-		:c.pid(String.to_integer(p1), String.to_integer(p2), String.to_integer(p3))
-  end
-
-  defp pid_to_string(pid) do
-		l_pid = :erlang.pid_to_list pid
-		List.to_string(l_pid) |> String.lstrip(?<) |> String.rstrip(?>)
-	end
 end

@@ -6,8 +6,8 @@ Event report stream as supervised agent.
 	# API
 
 	# Called by supervisor
-	def start_link(event_stream_def) do # state is an EventStream
-		Agent.start_link(fn -> Naira.EventStream.start(event_stream_def) end) # returns {:ok, pid}
+	def start_link(name, event_stream_def) do # state is an EventStream
+		Agent.start_link(fn -> Naira.EventStream.start(event_stream_def) end, [name: name]) # returns {:ok, pid}
 	end
 
 	def universal_event_stream() do
@@ -20,19 +20,25 @@ Event report stream as supervised agent.
 	  start_event_stream event_stream_def
   end
 
-	def next(pid) do # returns nil when end of stream is hit and the stream restarts from beginning
-		Agent.get_and_update(pid, &Naira.EventStream.next(&1) )
+	def fail(name) do
+		Agent.get(name, &(&1 / 3))
+  end
+
+	def next(name) do # returns nil when end of stream is hit and the stream restarts from beginning
+		Agent.get_and_update(name, &Naira.EventStream.next(&1) )
 	end
 
-	def stop(pid) do
-		Agent.stop(pid)
+	def stop(name) do
+		Agent.stop(name)
+		Naira.AtomPool.release name
 	end
 
   # PRIVATE
 
 	defp start_event_stream(event_stream_def) do
-		{:ok, pid} = Naira.StreamsSupervisor.start_event_stream event_stream_def
-		pid
+		name = Naira.AtomPool.take
+		{:ok, _pid} = Naira.StreamsSupervisor.start_event_stream(name, event_stream_def)
+		name
 	end
 
 end 
