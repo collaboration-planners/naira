@@ -15,7 +15,7 @@ defmodule Naira.Mixfile do
   # Type `mix help compile.app` for more information
   def application do
     [mod: {Naira, []},
-     applications: [:mnesia, :phoenix, :cowboy, :logger]]
+     applications: [:mnesia, :phoenix, :cowboy, :logger, :gen_smtp]]
   end
 
   # Specifies your project dependencies
@@ -27,6 +27,7 @@ defmodule Naira.Mixfile do
 		 {:timex, "~>0.13.1"}, 
 		 {:geo, "~> 0.8.0"},
 		 {:amnesia, github: "meh/amnesia", tag: :master},
-		 {:uuid, "~> 0.1.5"}]
+		 {:uuid, "~> 0.1.5"},
+		 {:gen_smtp, github: "Vagabond/gen_smtp", compile: "rebar compile"}]
   end
 end

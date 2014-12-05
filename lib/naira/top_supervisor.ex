@@ -1,6 +1,6 @@
 defmodule Naira.TopSupervisor do
 	@moduledoc """
-Naira's top supervisor.
+Naira's top supervisor. It supervises the Event Manager, the Atom Pool and the Stream Supervisor.
 """
 	@name __MODULE__
 	use Supervisor
@@ -13,7 +13,7 @@ Naira's top supervisor.
 	def init(_) do
 		children = [
 								 worker(Naira.EventManager, []),
-								 worker(Naira.AtomPool, []),
+								 worker(Naira.AtomPool, [100]), #pre-populate atom pool with 100 reusable atoms
 								 supervisor(Naira.StreamsSupervisor, [])
 						   ]
 		opts = [strategy: :one_for_one]

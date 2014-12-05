@@ -50,7 +50,7 @@ A cyclic event report stream based on an event report def.
 		
   end
 
-  defp apply_filters(event_report, self) do
+  defp apply_filters(_event_report, self) do
 		self
 		#TODO apply the event stream def filters
   end

@@ -1,13 +1,13 @@
 defmodule Naira.AtomPool do
   @moduledoc """
-A reusable atoms service.
+A pool of reusable atoms. Used to minimize the number of dynamically created atoms when there is no alternative.
 """
 
 	@name __MODULE__
 
   # API
-	def start_link() do
-		Agent.start_link(fn -> init end, [name: @name])
+	def start_link(initial_pool_size) do
+		Agent.start_link(fn -> init(initial_pool_size) end, [name: @name])
 	end
 
   def take() do
@@ -20,8 +20,8 @@ A reusable atoms service.
 
 	# PRIVATE
 
-	defp init() do
-		%{used: HashSet.new, unused: Enum.map(1..10, fn(_) -> make_atom end)} #start with a pool of 10 unused atoms
+	defp init(initial_pool_size) do
+		%{used: HashSet.new, unused: Enum.map(1..initial_pool_size, fn(_) -> make_atom end)} #start with a pool of unused atoms
   end
 
 	defp take_atom(state) do

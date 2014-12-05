@@ -4,6 +4,7 @@
   "cowlib": {:hex, :cowlib, "1.0.0"},
   "decimal": {:hex, :decimal, "0.2.5"},
   "exquisite": {:hex, :exquisite, "0.1.4"},
+  "gen_smtp": {:git, "git://github.com/Vagabond/gen_smtp.git", "8f7ba01172e679e8b4262334cefc3451b4c36777", []},
   "geo": {:hex, :geo, "0.8.0"},
   "jazz": {:hex, :jazz, "0.2.1"},
   "linguist": {:hex, :linguist, "0.1.3"},
