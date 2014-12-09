@@ -5,11 +5,16 @@ Handles internal Naira events.
 	use GenEvent
 
 	# Callbacks
+
+	@spec init(any) :: {:ok, any}
+	@doc "Event handler call initialization callback method."
 	def init(_) do
 		IO.puts "Internal event handler started"
 		{:ok, []}
   end
 
+  @spec handle_event({atom, any}, any) :: {:ok, any}
+	@doc "Event handling."
   def handle_event({:user_added, user}, state) do
 		# Create an event report and store it
 		date = Timex.DateFormat.format!(Timex.Date.now, "{RFC1123}")

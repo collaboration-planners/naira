@@ -1,9 +1,10 @@
 defmodule Naira.EmailService do
 	@moduledoc """
-  Email service.
+  Email sending service.
 """
 
   require Logger
+  use DB
 
   # Environment variable names
 	@smtp_server "NAIRA_SMTP_SERVER"
@@ -12,6 +13,8 @@ defmodule Naira.EmailService do
 
 	# API
 
+	@spec email_api_key([user: %User{}, api_key: String.t]) :: :ok | {:error, :email_not_sent}
+	@doc "Email a new api key to a user"
   def email_api_key([user: user, api_key: api_key]) do
 		text = """
 Hi #{user.name},
@@ -24,6 +27,8 @@ Naira
 		send! to: user.email, subject: "Your Naira API key", body: text
   end
 
+	@spec email_password([user: %User{}, password: String.t]) :: :ok | {:error, :email_not_sent}
+	@doc "Email a new password to a user"
   def email_password([user: user, password: password]) do
 		text = """
 Hi #{user.name},
@@ -36,6 +41,8 @@ Naira
 		send! to: user.email, subject: "Your new Naira password", body: text
   end
 
+  @spec password_changed([user: %User{}]) :: :ok | {:error, :email_not_sent}
+	@doc "Send email notice of password change."
   def password_changed([user: user]) do
 		text = """
 Hi #{user.name},
@@ -52,6 +59,7 @@ Naira
 
 	# PRIVATE
 
+	@spec send!([to: String.t, subject: String.t, body: String.t]) :: :ok | {:error, :email_not_sent}
   defp send!([to: to, subject: subject, body: body]) do
 		result = :gen_smtp_client.send({to, [smtp_login], "Subject: #{subject}\r\nFrom: #{smtp_login}\r\nTo: #{to}\r\n\r\n#{body}"}, [{:relay, smtp_server}, {:username, smtp_login}, {:password, smtp_password}])
 		IO.puts "Email sent to #{to}: #{inspect result}"

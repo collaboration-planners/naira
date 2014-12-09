@@ -1,13 +1,15 @@
-defmodule Naira.Assignment do
+defmodule Assignment do
 	@moduledoc """
-  A user assignment doc
+  A user assignment struct: A title in an organization.
   """
 	@derive Access
 
 	defstruct title: "", organization: ""
 
+	@spec new([title: String.t, organization: String.t]) :: %Assignment{}
+  @doc "Creates a new assignment"
 	def new([title: title, organization: org]) do
-		%Naira.Assignment{title: title, organization: org}
+		%Assignment{title: title, organization: org}
   end
 
 end

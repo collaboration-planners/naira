@@ -57,7 +57,7 @@ Naira is in early development
          * References
             * URLs
    * The user reporting an event is the event’s source
-   * The event report is added to the user’s stream and to the Universal stream
+   * The event report is added to the user’s stream and to the Universal stream (see below)
 * User adds metadata to any event (with user id and timestamp)
    * Metadata
       * Like vs dislike (I like/dislike that it happened)
@@ -65,37 +65,36 @@ Naira is in early development
       * Set/unset flags
          * Actionable
          * Ended
-   * Any event to which the user adds metadata is added to the user’s event stream
+   * Any event to which the user adds metadata is added to the user’s event stream event though the user is not necessarily the source
 * Naira-sourced events (Naira is the source)
    * User joined
    * User left
    * User changed his/her profile
-   * User vouched for
-   * New stream was shared
+   * User vouched for another
+   * Event stream was shared
    * User (un)subscribed from/to stream
    * Shared stream was modified
-   * Dashboard shared
+   * Dashboard shared (see below)
    * Shared dashboard modified
-About streams
-* User accesses built-in streams (user is subscribed to all of them by default)
-   * Universal stream - all events reported in Naira
-   * Naira stream - events with Naira as the source
+###About streams
+* User can subscribe to all built-in streams , namely
+   * Universal stream - all events reported in Naira (subscribed by default)
+   * Naira stream - events with Naira as the source (subscribed by default)
    * User stream - one per user
-      * Events reported, confirmed or dismissed by the user
-   * Trends stream (trending likes and dislikes from the Universal stream)
-   * Empty stream (contains no event)
+      * Events reported, liked, confirmed or dismissed by the user
+   * Trends stream (trending likes and dislikes from the Universal stream - subscribed by default)
 * User authors a named stream
-   * The new stream is owned, named and described
+   * The new stream is owned, named and described by its author
       * Has history of timestamped changes, including creation
       * Is private until shared
-   * The stream is configured by...
+   * The authored stream is configured by...
       * Forking a stream (copying another stream’s definition)
-      * Filtering another stream
+      * Filtering another, accessible stream
          * On tags (kinds of events)
          * On location
          * On trust (only events from trusted sources)
          * On timeliness (old events are dropped)
-      * Combining two streams using a stream operation
+      * Combining two accessible streams using a stream operation
          * Union, intersection, difference or other operator from plugin
       * Training the stream using a stream trainer (default trainer or plugin trainer)
          * Include this event (and others like it)
@@ -111,8 +110,8 @@ About streams
                * Likes vs dislikes (ratio > R and > N opinions)
             * New window created with each accepted event
             * Each window is closed after duration
-         * Synthesis event
-            * Collapses into one event all events passing the filter within a window
+         * Synthesis events
+            * Each collapses into one event all events passing the filter within a window
                * window initially closed
                * window created with first event filtered after window closed
                * window closed when duration elapsed
@@ -121,7 +120,7 @@ About streams
       * By integrating an external event generator via a connector
 * User shares a stream he/she authored
 * User unshares or deletes a stream
-   * Subscribers now each have their own copies of the stream
+   * Subscribers automatically fork the stream and now each have their own copies of the stream
 * User browses/searches for event streams
    * By ownership
       * Mine vs others

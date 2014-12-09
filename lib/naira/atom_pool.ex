@@ -5,20 +5,27 @@ A pool of reusable atoms. Used to minimize the number of dynamically created ato
 
 	@name __MODULE__
 
-  # API
+### API
+
+	@spec start_link(non_neg_integer) :: {:ok, pid} | {:error, {:already_started, pid} | term}
+	@doc "Starts a single agent that manages a pool of reusable atoms."
 	def start_link(initial_pool_size) do
 		Agent.start_link(fn -> init(initial_pool_size) end, [name: @name])
 	end
 
+	@spec take() :: atom
+  @doc "Serves a possibly recycled atom and changes the state of the pool accordingly."
   def take() do
 		Agent.get_and_update(@name, fn state -> take_atom state end)
   end
 
+	@spec release(atom) :: :ok
+  @doc "Releases an atom for eventual reuse, and changes the state of the pool accrodingly."
 	def release(atom) do
 		Agent.update(@name, fn state -> release_atom(atom, state) end)
 	end
 
-	# PRIVATE
+### PRIVATE
 
 	defp init(initial_pool_size) do
 		%{used: HashSet.new, unused: Enum.map(1..initial_pool_size, fn(_) -> make_atom end)} #start with a pool of unused atoms

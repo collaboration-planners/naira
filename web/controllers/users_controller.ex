@@ -46,7 +46,7 @@ defmodule Naira.UsersController do
 
   def update(conn, %{"id" => s_id, "api_key_for" => email, "password" => password}) do
 		user_id = String.to_integer s_id
-		json conn, JSON.encode!(Naira.UserService.set_api_key id: user_id, email: email, password: password)
+		json conn, JSON.encode!(Naira.UserService.create_api_key id: user_id, email: email, password: password)
   end
 
 
