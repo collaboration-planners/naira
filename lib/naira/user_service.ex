@@ -25,10 +25,22 @@ defmodule Naira.UserService do
   end
 
 	@spec get_user_with_email(String.t) :: %User{} | nil
-	@doc "Get the user with the unique email."
+	@doc "Get the user with the given email."
 	def get_user_with_email(email) do
 		User.get([email: email])
 	end
+
+	@spec get_user_with_api_key(String.t) :: %User{} | nil
+	@doc "Get user with the given api key"
+  def get_user_with_api_key(api_key) do
+		credentials = Credentials.get api_key: api_key
+    if credentials !== nil do
+			user_id = credentials.user_id
+		  get_user_with_id(user_id)
+		else
+			nil
+		end
+  end
 
 	@spec get_user_with_id(non_neg_integer) :: %User{}
 	@doc "Get the user with the unique id"
@@ -90,11 +102,11 @@ defmodule Naira.UserService do
 		@naira_id
   end
 
-	@spec set_api_key([id: non_neg_integer, email: String.t, password: String.t]) :: {:ok, String.t} | {:error, :not_found}
+	@spec set_api_key([email: String.t, password: String.t]) :: {:ok, String.t} | {:error, :not_found}
 	@doc "Set the api key for a user identified by unique user id and email, and authenticated by password. An email notification is sent."
-  def set_api_key([id: user_id, email: email, password: password]) do
+  def set_api_key([email: email, password: password]) do
 		user = authenticate email: email, password: password
-    if user !== nil and user.id == user_id do 
+    if user !== nil do 
 		    result = Credentials.set_api_key user_id: user.id
 				case result do
 					{:ok, api_key} -> Naira.EmailService.email_api_key user: user, api_key: api_key

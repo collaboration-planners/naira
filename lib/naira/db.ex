@@ -43,7 +43,7 @@ defdatabase DB do
 		  Amnesia.transaction do User.read(id) end
     end
 
-		@spec destroy(non_neg_integer) :: :ok | { :error, any }
+		@spec destroy(non_neg_integer) :: :ok
 		def destroy(id) do
 			Amnesia.transaction do User.delete id end
     end
@@ -67,9 +67,9 @@ defdatabase DB do
       end
 	  end
 
-		@spec create_api_key([user_id: non_neg_integer]) :: {:ok, String.t} | {:error, :not_found}
-		@doc "Creates or updates a user's api key."
-    def create_api_key([user_id: user_id]) do
+		@spec set_api_key([user_id: non_neg_integer]) :: {:ok, String.t} | {:error, :not_found}
+		@doc "Sets or updates a user's api key."
+    def set_api_key([user_id: user_id]) do
 			self = get user_id: user_id
 			if self !== nil do
 				api_key = UUID.uuid1
@@ -82,7 +82,7 @@ defdatabase DB do
 			end
 	  end
 
-		@spec destroy([user_id: non_neg_integer]) :: :ok | { :error, any }
+		@spec destroy([user_id: non_neg_integer]) :: :ok
 		@doc "Remove a user's credentials."
 		def destroy([user_id: user_id]) do 
 			self = get user_id: user_id
@@ -91,7 +91,7 @@ defdatabase DB do
       end
     end
 
-		@spec get([user_id: non_neg_integer]) :: %Credentials{} | nil
+		@spec get([atom: any]) :: %Credentials{} | nil
 		@doc "Get a user's credentials"
 		def get([user_id: user_id]) do
 			result = Amnesia.transaction do Credentials.read_at(user_id, :user_id) end
@@ -100,6 +100,13 @@ defdatabase DB do
         _ -> nil
       end
     end
+		def get([api_key: api_key]) do
+			result = Amnesia.transaction do Credentials.read_at(api_key, :api_key) end
+      case result do
+				[credentials] -> credentials
+        _ -> nil
+      end
+		end
 
 		@spec update_password([user_id: non_neg_integer, password: String.t]) :: :ok | {:error, :not_found}
 		@doc "Update a user's password to a new given one."
@@ -149,7 +156,7 @@ defdatabase DB do
 			Amnesia.transaction do EventReport.read_at(user_id, :user_id) end
     end
 
-		@spec destroy(non_neg_integer) ::  :ok | { :error, any }
+		@spec destroy(non_neg_integer) ::  :ok
 		@doc "Remove an event report given its unique id."
 		def destroy(id) do
 			Amnesia.transaction do EventReport.delete id end
@@ -158,7 +165,7 @@ defdatabase DB do
   end
 
 	@doc "An event stream definitions table."
-	deftable EventStreamDef, [{:id, autoincrement}, :foundational, :user_id, :shared, :source_streams, :filters], type: :set, index: [:user_id] do
+	deftable EventStreamDef, [{:id, autoincrement}, :user_id, :shared, :source_stream_defs, :filters], type: :set, index: [:user_id] do
 
 		@spec add(%EventStreamDef{}) :: %EventStreamDef{}
 		@doc "Adds a new event stream definition. Returns it fully initialized."
@@ -178,7 +185,7 @@ defdatabase DB do
 		@spec universal?(%EventStreamDef{}) :: boolean
 		@doc "Whether an event stream definition is the universal (empty) one."
 		def universal?(self) do
-			self.user_id == 0
+			self.user_id == 1 and self.source_stream_defs == [] and self.filters == []
     end
 
   end

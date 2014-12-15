@@ -2,6 +2,7 @@
   "continuum": {:git, "git://github.com/meh/continuum.git", "4125f9d428971568f16da78cec24fddce18d6eca", []},
   "cowboy": {:hex, :cowboy, "1.0.0"},
   "cowlib": {:hex, :cowlib, "1.0.0"},
+  "dbg": {:git, "git://github.com/fishcakez/dbg.git", "5abaf737c2f4146592b33fc04ed948b4c21d84cc", []},
   "decimal": {:hex, :decimal, "0.2.5"},
   "exquisite": {:hex, :exquisite, "0.1.4"},
   "gen_smtp": {:git, "git://github.com/Vagabond/gen_smtp.git", "8f7ba01172e679e8b4262334cefc3451b4c36777", []},

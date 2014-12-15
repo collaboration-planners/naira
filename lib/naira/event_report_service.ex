@@ -6,18 +6,18 @@ Event report service.
 
 	# API 
 
-	@spec add_event_report([user_id: non_neg_integer, headline: String.t, description: String.t]) :: %EventReport{}
+	@spec add_event_report(map) :: %EventReport{}
 	@doc "Add new event report"
-	def add_event_report([user_id: user_id, headline: headline, description: description]) do
-		event_report = event_report(user_id: user_id, headline: headline, description: description)
+	def add_event_report(props) do
+		event_report = event_report(props)
 		Naira.EventManager.notify_event_report_added event_report
 		EventReport.add event_report
   end
 
-	@spec event_report([user_id: non_neg_integer, headline: String.t, description: String.t]) :: %EventReport{}
+	@spec event_report(map) :: %EventReport{}
   @doc "Create a new event report"
-  def event_report([user_id: user_id, headline: headline, description: description]) do
-		%EventReport{user_id: user_id, headline: headline, description: description, date: Timex.Date.epoch(:secs), tags: [], refs: [] }
+  def event_report(props) do
+		%EventReport{user_id: props.user_id, headline: props.headline, description: props.description, date: Timex.Date.now(:secs), tags: props.tags, location: props.location, refs: [] }
   end
 
 	@spec get_all_event_reports() :: [%EventReport{}]
@@ -42,6 +42,10 @@ Event report service.
 	def destroy_event_report(id) do
 		EventReport.destroy id
 		# TODO Raise event?
+  end
+
+	def age(self) do
+		Timex.Date.now(:secs) - self.date
   end
 
 end

@@ -2,7 +2,7 @@ defmodule Naira.EventsController do
 
 	use Phoenix.Controller
 	require Naira.WebUtils
-  import Naira.WebUtils, only: [key_protected: 3]
+  import Naira.WebUtils, only: [key_protected: 3, default: 2]
 	alias Poison, as: JSON
 	plug :action
 
@@ -30,7 +30,9 @@ defmodule Naira.EventsController do
   def create(conn, params) do
 		api_key = params["key"]
 		key_protected(conn, api_key) do
-			event_report = Naira.EventReportService.add_event_report(user_id: params["user_id"],  headline: params["headline"], description: params["description"])
+			user = Naira.UserService.get_user_with_api_key(api_key)
+			event_map = %{user_id: user.id, headline: default(params["headline"],"?"), description: default(params["description"],""), tags: default(params["tags"],[]), location: default(params["location"],""), refs: default(params["refs"],[])}
+			event_report = Naira.EventReportService.add_event_report(event_map)
 			json conn, JSON.encode! event_report
 		end
   end

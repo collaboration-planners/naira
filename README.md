@@ -94,8 +94,7 @@ Naira is in early development
          * On location
          * On trust (only events from trusted sources)
          * On timeliness (old events are dropped)
-      * Combining two accessible streams using a stream operation
-         * Union, intersection, difference or other operator from plugin
+      * Combining two accessible streams (union)
       * Training the stream using a stream trainer (default trainer or plugin trainer)
          * Include this event (and others like it)
          * Exclude this event (and others like it)
@@ -111,24 +110,24 @@ Naira is in early development
             * New window created with each accepted event
             * Each window is closed after duration
          * Synthesis events
-            * Each collapses into one event all events passing the filter within a window
+            * Each collapses into one event all events passing the filter within a time window
                * window initially closed
                * window created with first event filtered after window closed
                * window closed when duration elapsed
             * The collapsed event is the first event
                * Other events considered alternate versions of it 
       * By integrating an external event generator via a connector
-* User shares a stream he/she authored
+* User shares a stream definition he/she authored
 * User unshares or deletes a stream
    * Subscribers automatically fork the stream and now each have their own copies of the stream
-* User browses/searches for event streams
+* User browses/searches for event stream definitions
    * By ownership
       * Mine vs others
       * From trusted sources only
    * By filter attributes
    * Subscribed to vs not
-* User (un)subscribes from/to someone else’s stream
-   * Subscribed-to stream might be changed/unshared/deleted by its author at any time
+* User (un)subscribes from/to someone else’s stream definition
+   * Subscribed-to stream definition might be changed/unshared/deleted by its author at any time
 * User directs a stream to an event sink
    * Email event sink
       * His email address
@@ -153,7 +152,7 @@ Naira is in early development
 #Plugins
 * External event source connectors (input)
 * External event sink connectors (output)
-* Stream operators and trainers
+* Stream trainers
 * Stream viewers
 * Dashboard viewers
 
@@ -171,7 +170,15 @@ Naira is in early development
 
 ## Starting Naira
 
-The first time you run Naira you will need to initialize the database using `mix dB.install`.
+The first time you run Naira you will need to initialize the database using `mix DB.Install`.
+To re-initialize the DB, do `mix DB.Unistall`
+
+You also need to set the following environment variables:
+* NAIRA_SMTP_SERVER -- e.g. imap.googlemail.com
+* NAIRA_SMTP_LOGIN  -- e.g. account@example.com
+* NAIRA_SMTP_PASSWORD -- e.g. password1234
+
 Then start Phoenix router with `mix phoenix.start`
+Alternately, to retain control of the terminal (to start an observer etc.), do `iex -S mix` then, in iex, do `Naira.start_phoenix`
 
 Now you can visit `localhost:4000` from your browser.

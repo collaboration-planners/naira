@@ -36,14 +36,21 @@ defmodule Naira.EventStreamDefService do
 	@spec user_event_stream_def(%User{}) :: %EventStreamDef{}
 	@doc "Create a user's event stream definition"
 	def user_event_stream_def(user) do
-		%EventStreamDef{foundational: true, shared: true, user_id: user.id, source_streams: [], filters: []}
+		filter_def = FilterDef.source(user.id)
+		%EventStreamDef{shared: true, source_stream_defs: [], filters: [filter_def]}
 	end
 
 	@spec universal_event_stream_def() :: %EventStreamDef{}
 	@doc "Create the universal event stream definition"
   def universal_event_stream_def() do
-		%EventStreamDef{foundational: true, shared: true, user_id: 0, source_streams: [], filters: []}
+		%EventStreamDef{user_id: 1, shared: true, user_id: 0, source_stream_defs: [], filters: []}
 	end
 
+  @spec properties_event_stream_def([user: %User{}, filter_options: %FilterOptions{}]) :: %EventStreamDef{}
+  @doc "Create an event stream that filters event reports on their properties"
+  def properties_event_stream_def([user: user, filter_options: filter_options]) do
+		filter_def = FilterDef.new([mod: PropertyFilter, options: filter_options])
+		%EventStreamDef{user_id: user.id, shared: false, source_stream_defs: [], filters: [filter_def]}
+  end
 
 end

@@ -6,7 +6,7 @@ The Naira application. It starts Mnesia, initializing it if needed, and starts t
 
 ### Application Callbacks
 
-@spec start(atom, any) :: {:ok, pid} | {:ok, pid, any} | {:error, any}
+@spec start(atom, any) :: {:ok, pid}
 @doc "Starts the Naira application"
 def start(_type, _args) do
     import Supervisor.Spec, warn: false

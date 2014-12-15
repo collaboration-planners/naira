@@ -7,14 +7,15 @@ A cyclic event report stream based on an event stream definition.
 	@derive Access
 
 	@doc " An event stream definition struct"
-	defstruct event_stream_def: nil, current: nil
+	defstruct event_stream_def: nil, current: nil, user: nil, sources: [] # if empty, the source of event reports to filter is the Universal stream, else list of source stream names
 
 ### API
 
-	@spec start(%EventStreamDef{}) :: %EventReport{} | nil
+	@spec start(%EventStreamDef{}, %User{}) :: %EventReport{} | nil
 	@doc "Create a new event stream and return first event report from it"
-	def start(event_stream_def) do 
-		event_stream = new event_stream_def
+	def start(event_stream_def, user) do 
+		event_stream = new(event_stream_def, user)
+		# TODO: initialize source event streams if any
     advance event_stream
   end
 
@@ -28,44 +29,47 @@ A cyclic event report stream based on an event stream definition.
 
 ### Private
 
-  defp new(event_stream_def) do
-		%Naira.EventStream{event_stream_def: event_stream_def}
+  defp new(event_stream_def, user) do
+		%Naira.EventStream{event_stream_def: event_stream_def, user: user}
   end
 
 	# Advance when at end.
 	defp advance(self = %Naira.EventStream{current: current}) when current == nil do
-		event_report = Amnesia.transaction do EventReport.first end
+		event_report = first_event_report(self)
 		updated = %Naira.EventStream{self | current: event_report}
-		filter(event_report, updated)
+		apply_filters(event_report, updated)
 	end
 	# Advance when not at end.
   defp advance(self) do
-		event_report = Amnesia.transaction do EventReport.next self.current end
+		event_report = next_event_report(self)
 		updated = %Naira.EventStream{self | current: event_report}
-		filter(event_report, updated)
+		apply_filters(event_report, updated)
 	end
 
-	# Advance the stream until a candidate, non-filtered out event report is reached.
-	defp filter(nil, self) do
-		self
-  end
-	defp filter(event_report, self) do
-		if EventStreamDef.universal?(self.event_stream_def) do # All event reports are candidates for a universal stream with or without filters
-			apply_filters(event_report, self)
-    else
-			#Only event reports authored by a user are candidate for that user's event stream
-			if event_report.user_id == self.event_stream_def.user_id do
-				apply_filters(event_report, self)
-      else
-				advance self
-			end
-		end
-		
+	defp first_event_report(self) do
+		#TODO: if source not Universal, get first from first source
+		Amnesia.transaction do EventReport.first end
   end
 
-  defp apply_filters(_event_report, self) do
-		self
-		#TODO apply the event stream def filters
+  defp next_event_report(self) do
+		#TODO: if source not Universal, get next from round-robbin over sources, skipping at end sources
+    # Return nil when all sources at end
+		Amnesia.transaction do EventReport.next self.current end
+  end
+
+	# Advance the stream until an event report passes the filters or the end is reached.
+	defp apply_filters(nil, self) do
+    self
+  end
+  defp apply_filters(event_report, self) do
+		filters = self.event_stream_def.filters
+		passes = Enum.all?(filters, 
+											 fn(filter) -> apply(filter.mod, :passes?, [event_report,filter.options, self.user]) end)
+		if passes do
+			self
+    else
+      advance self
+    end
   end
 
 end
