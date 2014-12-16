@@ -82,12 +82,16 @@ defdatabase DB do
 			end
 	  end
 
-		@spec destroy([user_id: non_neg_integer]) :: :ok
+		@spec destroy([user_id: non_neg_integer]) :: :ok | {:error, :not_found}
 		@doc "Remove a user's credentials."
 		def destroy([user_id: user_id]) do 
-			self = get user_id: user_id
-      if self !== nil do
-				Amnesia.transaction do Credentials.delete self.id end
+			Amnesia.transaction do
+				self = get user_id: user_id
+				if self !== nil do
+				 Credentials.delete self.id 
+        else
+					{:error, :not_found}
+				end
       end
     end
 
@@ -165,21 +169,47 @@ defdatabase DB do
   end
 
 	@doc "An event stream definitions table."
-	deftable EventStreamDef, [{:id, autoincrement}, :user_id, :shared, :source_stream_defs, :filters], type: :set, index: [:user_id] do
+	deftable EventStreamDef, [{:id, autoincrement}, :description, :user_id, :shared, :source_stream_defs, :filters], type: :ordered_set, index: [:user_id, :shared] do
 
 		@spec add(%EventStreamDef{}) :: %EventStreamDef{}
 		@doc "Adds a new event stream definition. Returns it fully initialized."
 		def add(self) do
+			true = self.user_id > 0
 			Amnesia.transaction do 
 				EventStreamDef.write self 
 				EventStreamDef.last
 			end
 	  end
 
+		@spec destroy([id: non_neg_integer]) :: :ok | {:error, :not_found}
+		@doc "Destroys the event stream def with the given id"
+		def destroy([id: id]) do 
+			Amnesia.transaction do
+				self = get id
+				if self !== nil do
+				 EventStreamDef.delete self.id 
+				else
+				 {:error, :not_found}
+				end
+      end
+    end
+
+		@spec get(non_neg_integer) :: %EventStreamDef{} | nil
+		@doc "Get the event stream def with a given id"
+		def get(id) do
+			Amnesia.transaction do EventStreamDef.read(id) end 
+    end
+
 		@spec get_all([user_id: non_neg_integer]) :: [%EventStreamDef{}]
 		@doc "Get all event stream definitions authored by a user given its id."
     def get_all([user_id: user_id]) do
 			Amnesia.transaction do EventStreamDef.read_at(user_id, :user_id) end
+    end
+
+		@spec get_all_shared() :: [%EventStreamDef{}]
+    @doc "Get all shared event stream defs"
+    def get_all_shared() do
+			Amnesia.transaction do EventStreamDef.read_at(true, :shared) end
     end
 
 		@spec universal?(%EventStreamDef{}) :: boolean

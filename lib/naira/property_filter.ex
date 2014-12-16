@@ -19,6 +19,12 @@ defmodule PropertyFilter do
 		and passes_timeliness?(event_report, filter_options)
   end
 
+	@spec type() :: String.t
+  @doc "The type of this filter"
+	def type() do
+		"property"
+  end
+
   # PRIVATE
 
   defp passes_source?(event_report, filter_options) do
@@ -44,13 +50,16 @@ defmodule PropertyFilter do
   end
 
 	defp passes_trust?(event_report, filter_options, user) do
-		!filter_options.trust or event_report.source == user.id
+		!filter_options.trust or Enum.member?(user.vouchers, event_report.user_id)
   end
 
   defp passes_timeliness?(event_report, filter_options) do
 		max_elapsed = filter_options.max_elapsed
-		max_elapsed == 0 or EventReport.age(event_report) <= max_elapsed
+		max_elapsed == 0 or age(event_report) <= max_elapsed
   end
 
+	defp age(event_report) do
+		Timex.Date.now(:secs) - event_report.date
+	end
 
 end

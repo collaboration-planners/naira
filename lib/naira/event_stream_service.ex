@@ -21,17 +21,23 @@ Naira's event stream service. Generates and managed each event report stream as 
   end
 
 	@spec user_event_stream([source: %User{}, user: %User{}]) :: atom
-	@doc "Starts a user event stream for a given user."
-  def user_event_stream([source: source, user: user]) do # Shorthand for a properties event stream filtering only on source
+	@doc "Starts a user event stream for a given user from ad hoc definition."
+  def user_event_stream([source: source, user: user]) do
 		event_stream_def = Naira.EventStreamDefService.user_event_stream_def(source)
 	  start_event_stream(event_stream_def, user)
   end
 
 	@spec properties_event_stream([filter_options: %FilterOptions{}, user: %User{}]) :: atom
-	@doc "Starts a properties event stream."
+	@doc "Starts a properties event stream from ad hoc definition."
   def properties_event_stream([filter_options: filter_options, user: user]) do
 		event_stream_def = Naira.EventStreamDefService.properties_event_stream_def([user: user, filter_options: filter_options])
 	  start_event_stream(event_stream_def, user)
+  end
+
+	@spec event_stream(%EventStreamDef{}, %User{}) :: atom
+	@doc "Starts an event stream given its definition"
+  def event_stream(event_stream_def, user) do
+		start_event_stream(event_stream_def, user)
   end
 
 	# For testing

@@ -40,7 +40,6 @@ def start(_type, _args) do
 
   # Adds the universal stream definition and the Naira user to the database, if not already there.
 	defp initialize_db() do
-		Naira.EventStreamDefService.add_universal_event_stream_def
 		Naira.UserService.add_user_naira
   end
 

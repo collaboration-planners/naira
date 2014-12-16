@@ -18,9 +18,13 @@ Handles internal Naira events.
   def handle_event({:user_added, user}, state) do
 		# Create an event report and store it
 		date = Timex.DateFormat.format!(Timex.Date.now, "{RFC1123}")
-		Naira.EventReportService.add_event_report(user_id: Naira.UserService.naira_id, headline: "New user #{user.name}", description: "User #{user.name} at #{user.email} was added on #{date}")
+		Naira.EventReportService.add_event_report(%{user_id: Naira.UserService.naira_id, headline: "New user #{user.name}", description: "User #{user.name} at #{user.email} was added on #{date}"})
 		IO.puts "Handled event: Added event report about new user #{user.name}"
-    # Create user event stream
+    # Create event stream definitions
+    if Naira.UserService.user_naira?(user) do
+      		Naira.EventStreamDefService.add_universal_event_stream_def
+					IO.puts "Handled event: Added universal event stream def for user #{user.name}"
+    end
 		Naira.EventStreamDefService.add_user_event_stream_def(user)
 		IO.puts "Handled event: Added event stream def for new user #{user.name}"
     {:ok, state}

@@ -64,7 +64,7 @@ A cyclic event report stream based on an event stream definition.
   defp apply_filters(event_report, self) do
 		filters = self.event_stream_def.filters
 		passes = Enum.all?(filters, 
-											 fn(filter) -> apply(filter.mod, :passes?, [event_report,filter.options, self.user]) end)
+											 fn(filter) -> apply(Naira.Filter.mod_from_type(filter.type), :passes?, [event_report,filter.options, self.user]) end)
 		if passes do
 			self
     else

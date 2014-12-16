@@ -15,5 +15,6 @@ defmodule Naira.Router do
 		resources "/events", Naira.EventsController, only: [:index, :show, :create, :destroy]
 		resources "/streams", Naira.StreamsController, only: [:create, :show, :destroy]
 		resources "/users", Naira.UsersController, only: [:index, :show, :create, :update, :destroy]
+		resources "/streamdefs", Naira.StreamDefsController, only: [:index, :show, :create, :destroy]
   end
 end

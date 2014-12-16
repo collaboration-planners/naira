@@ -15,17 +15,17 @@ defmodule Naira.UsersController do
 		end
 	end
 
+  def show(conn, %{"email" => email, "key" => api_key}) do
+		key_protected(conn, api_key) do
+			json conn, JSON.encode!(Naira.UserService.get_user_with_email email)
+	  end
+	end
+
   def show(conn, %{"id" => s_id, "key" => api_key}) do
 		key_protected(conn, api_key) do
 			id = String.to_integer s_id
 			json conn, JSON.encode!(Naira.UserService.get_user_with_id id)
 		end
-	end
-
-  def show(conn, %{"email" => email, "key" => api_key}) do
-		key_protected(conn, api_key) do
-			json conn, JSON.encode!(Naira.UserService.get_user_with_email email)
-	  end
 	end
 
 	def destroy(conn, %{"id" => s_id, "key" => api_key}) do

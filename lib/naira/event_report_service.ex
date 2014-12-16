@@ -3,6 +3,7 @@ defmodule Naira.EventReportService do
 Event report service.
 """
 	use DB
+	import Naira.WebUtils, only: [default: 2]
 
 	# API 
 
@@ -17,7 +18,7 @@ Event report service.
 	@spec event_report(map) :: %EventReport{}
   @doc "Create a new event report"
   def event_report(props) do
-		%EventReport{user_id: props.user_id, headline: props.headline, description: props.description, date: Timex.Date.now(:secs), tags: props.tags, location: props.location, refs: [] }
+		%EventReport{user_id: props.user_id, headline: props.headline, description: props.description, date: Timex.Date.now(:secs), tags: default(props[:tags],[]), location: default(props[:location],[]), refs: default(props[:refs],[]) }
   end
 
 	@spec get_all_event_reports() :: [%EventReport{}]
