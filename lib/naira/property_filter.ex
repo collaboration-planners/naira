@@ -28,17 +28,20 @@ defmodule PropertyFilter do
   # PRIVATE
 
   defp passes_source?(event_report, filter_options) do
+		IO.puts "Testing source"
 		filter_source = filter_options.source
 		filter_source === nil or event_report.user_id === filter_source
   end
 
 	defp passes_tags?(event_report, filter_options) do
+		IO.puts "Testing tags"
 		event_tags = event_report.tags
 		filter_tags = filter_options.tags
 		Enum.empty?(filter_tags) or Enum.any?(filter_tags, fn(tag) -> Enum.member?(event_tags, tag) end)
   end
 
   defp passes_location?(event_report, filter_options) do
+		IO.puts "Testing location"
 		event_location = event_report.location
 		filter_locations = filter_options.locations
 		Enum.empty?(filter_locations) or Enum.any?(filter_locations, fn(location) -> within_location?(event_location, location) end)
@@ -50,10 +53,12 @@ defmodule PropertyFilter do
   end
 
 	defp passes_trust?(event_report, filter_options, user) do
+		IO.puts "Testing trust"
 		!filter_options.trust or Enum.member?(user.vouchers, event_report.user_id)
   end
 
   defp passes_timeliness?(event_report, filter_options) do
+		IO.puts "Testing timeliness"
 		max_elapsed = filter_options.max_elapsed
 		max_elapsed == 0 or age(event_report) <= max_elapsed
   end

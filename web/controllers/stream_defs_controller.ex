@@ -62,8 +62,8 @@ defmodule Naira.StreamDefsController do
 	defp from_definition(type, definition, user) do
 		description = default(definition["description"], "NO DESCRIPTION")
 		shared = default(definition["shared"], false)
-		source_stream_defs = default(definition["source_stream_defs"],[])
-		event_stream_def = %EventStreamDef{description: description, user_id: user.id, shared: shared, source_stream_defs: source_stream_defs}
+		sub_stream_defs = default(definition["sub_stream_defs"],[])
+		event_stream_def = %EventStreamDef{description: description, user_id: user.id, shared: shared, sub_stream_defs: sub_stream_defs}
 		case type do
 			"properties" ->
 				filter_options = FilterOptions.from_map(default(definition["properties"], %{}))

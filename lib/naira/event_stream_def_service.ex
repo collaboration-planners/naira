@@ -49,20 +49,20 @@ defmodule Naira.EventStreamDefService do
 	@doc "Create a user's event stream definition"
 	def user_event_stream_def(user) do
 		filter_def = FilterDef.source(user.id)
-		%EventStreamDef{description: "All events from #{user.name} (#{user.email})", user_id: user.id, shared: true, source_stream_defs: [], filters: [filter_def]}
+		%EventStreamDef{description: "All events from #{user.name} (#{user.email})", user_id: user.id, shared: true, sub_stream_defs: [], filters: [filter_def]}
 	end
 
 	@spec universal_event_stream_def() :: %EventStreamDef{}
 	@doc "Create the universal event stream definition"
   def universal_event_stream_def() do
-		%EventStreamDef{description: "All events", user_id: 1, shared: true, source_stream_defs: [], filters: []}
+		%EventStreamDef{description: "All events", user_id: 1, shared: true, sub_stream_defs: [], filters: []}
 	end
 
   @spec properties_event_stream_def([user: %User{}, filter_options: %FilterOptions{}]) :: %EventStreamDef{}
   @doc "Create an event stream that filters event reports on their properties"
   def properties_event_stream_def([user: user, filter_options: filter_options]) do
 		filter_def = FilterDef.new([type: PropertyFilter.type, options: filter_options])
-		%EventStreamDef{description: "Ad hoc event stream", user_id: user.id, shared: false, source_stream_defs: [], filters: [filter_def]}
+		%EventStreamDef{description: "Ad hoc event stream", user_id: user.id, shared: false, sub_stream_defs: [], filters: [filter_def]}
   end
 
 	@spec get_all_visible(%User{}) :: [%EventStreamDef{}]

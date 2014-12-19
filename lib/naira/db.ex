@@ -160,6 +160,18 @@ defdatabase DB do
 			Amnesia.transaction do EventReport.read_at(user_id, :user_id) end
     end
 
+		@spec get_first() :: %EventReport{} | nil
+		@doc "Get first event report"
+		def get_first() do
+				Amnesia.transaction do EventReport.first end
+    end
+
+		@spec next(%EventReport{}) :: %EventReport{} | nil
+		@doc "Get next event report after given one"
+		def get_next(self) do
+			Amnesia.transaction do EventReport.next self end
+		end
+
 		@spec destroy(non_neg_integer) ::  :ok
 		@doc "Remove an event report given its unique id."
 		def destroy(id) do
@@ -169,7 +181,7 @@ defdatabase DB do
   end
 
 	@doc "An event stream definitions table."
-	deftable EventStreamDef, [{:id, autoincrement}, :description, :user_id, :shared, :source_stream_defs, :filters], type: :ordered_set, index: [:user_id, :shared] do
+	deftable EventStreamDef, [{:id, autoincrement}, :description, :user_id, :shared, :sub_stream_defs, :filters], type: :ordered_set, index: [:user_id, :shared] do
 
 		@spec add(%EventStreamDef{}) :: %EventStreamDef{}
 		@doc "Adds a new event stream definition. Returns it fully initialized."
@@ -215,7 +227,7 @@ defdatabase DB do
 		@spec universal?(%EventStreamDef{}) :: boolean
 		@doc "Whether an event stream definition is the universal (empty) one."
 		def universal?(self) do
-			self.user_id == 1 and self.source_stream_defs == [] and self.filters == []
+			self.user_id == 1 and self.sub_stream_defs == [] and self.filters == []
     end
 
   end

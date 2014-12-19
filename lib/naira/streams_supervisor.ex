@@ -28,7 +28,6 @@ end
 @spec start_event_stream(atom, %EventStreamDef{}, %User{}) :: {:ok, pid}
 @doc "Dynamically starts an event stream as agent."
 def start_event_stream(name, event_stream_def, user) do
-	IO.puts "Starting event stream #{name}"
 	Supervisor.start_child(@name, [name, event_stream_def, user])
 end
 
