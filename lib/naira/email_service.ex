@@ -62,7 +62,7 @@ Naira
 	@spec send!([to: String.t, subject: String.t, body: String.t]) :: :ok | {:error, :email_not_sent}
   defp send!([to: to, subject: subject, body: body]) do
 		result = :gen_smtp_client.send({to, [smtp_login], "Subject: #{subject}\r\nFrom: #{smtp_login}\r\nTo: #{to}\r\n\r\n#{body}"}, [{:relay, smtp_server}, {:username, smtp_login}, {:password, smtp_password}])
-		IO.puts "Email sent to #{to}: #{inspect result}"
+		Logger.debug "Email sent to #{to}: #{inspect result}"
 		case result do
 			{:ok, _} -> :ok
 			_ -> Logger.warn "Failed to email \"#{subject}\" to #{to}: #{inspect result}"

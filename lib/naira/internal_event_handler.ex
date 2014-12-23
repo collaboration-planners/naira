@@ -3,13 +3,14 @@ defmodule Naira.InternalEventHandler do
 Handles internal Naira events.
 """
 	use GenEvent
+	require Logger
 
 	# Callbacks
 
 	@spec init(any) :: {:ok, any}
 	@doc "Event handler call initialization callback method."
 	def init(_) do
-		IO.puts "Internal event handler started"
+		Logger.debug "Internal event handler started"
 		{:ok, []}
   end
 
@@ -19,14 +20,14 @@ Handles internal Naira events.
 		# Create an event report and store it
 		date = Timex.DateFormat.format!(Timex.Date.now, "{RFC1123}")
 		Naira.EventReportService.add_event_report(%{user_id: Naira.UserService.naira_id, headline: "New user #{user.name}", description: "User #{user.name} at #{user.email} was added on #{date}"})
-		IO.puts "Handled event: Added event report about new user #{user.name}"
+		Logger.debug "Handled event: Added event report about new user #{user.name}"
     # Create event stream definitions
     if Naira.UserService.user_naira?(user) do
       		Naira.EventStreamDefService.add_universal_event_stream_def
-					IO.puts "Handled event: Added universal event stream def for user #{user.name}"
+					Logger.debug "Handled event: Added universal event stream def for user #{user.name}"
     end
 		Naira.EventStreamDefService.add_user_event_stream_def(user)
-		IO.puts "Handled event: Added event stream def for new user #{user.name}"
+		Logger.debug "Handled event: Added event stream def for new user #{user.name}"
     {:ok, state}
   end
   def handle_event({:event_report_added, _event_report}, state) do

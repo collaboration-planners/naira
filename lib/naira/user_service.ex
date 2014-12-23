@@ -69,7 +69,7 @@ defmodule Naira.UserService do
 				added_user
       end
     else
-			IO.puts "User with email #{email} already exists"
+			Logger.debug "User with email #{email} already exists"
 			stored_user
     end
   end

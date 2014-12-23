@@ -17,7 +17,7 @@ defdatabase DB do
 					User.write self
 					User.last
 				else
-          IO.puts "User with email #{self.email} already exists"
+          Logger.debug "User with email #{self.email} already exists"
 					nil
         end
 			end

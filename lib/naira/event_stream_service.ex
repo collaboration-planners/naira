@@ -61,7 +61,7 @@ Naira's event stream service. Generates and managed each event report stream as 
 	@spec next(atom) :: %StreamedEventReport{} | nil
   @doc "Gets the next event report from the named event stream and advances it. Nil is returned at the end of the stream that is then restarted."
 	def next(name) do # returns nil when end of stream is hit and the stream restarts from beginning
-		IO.puts "===> Next of #{name}"
+		Logger.debug "===> Next of #{name}"
  		Agent.get_and_update(name, &EventStream.next(&1) )
 	end
 
@@ -90,7 +90,7 @@ Naira's event stream service. Generates and managed each event report stream as 
 	@doc "Asks the streams supervisor to start a new event stream as agent using a new or recylced name which is returned."
 	def start_event_stream([event_stream_def: event_stream_def, user: user, super_stream: super_event_stream]) do
 		name = Naira.AtomPool.take
-		IO.puts "===> Starting event stream named #{name} from def #{event_stream_def.description}"
+		Logger.debug "===> Starting event stream named #{name} from def #{event_stream_def.description}"
 		{:ok, _pid} = Naira.StreamsSupervisor.start_event_stream(name, event_stream_def, user, super_event_stream)
 		name
 	end

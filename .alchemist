@@ -1,4 +1,4 @@
 {
-  "ansi-color-docs": "nil",
-  "compile-when-needed": "t"
+  "ansi-color-docs": "t",
+  "compile-when-needed": "f"
 }

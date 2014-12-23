@@ -6,13 +6,14 @@ The event report stream supervisor.
 @name __MODULE__
 use Supervisor
 use DB
+require Logger
 
 # CALLBACKS
 
 @spec start_link() :: {:ok, pid}
 @doc "Starts the event stream supervisor. Called by the main supervisor."
 def start_link() do
-	IO.puts "Starting streams supervisor"
+	Logger.debug "Starting streams supervisor"
 	{:ok, _pid} = Supervisor.start_link(@name, [], [name: @name])
 end
 

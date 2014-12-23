@@ -5,12 +5,13 @@ It is itself supervised by the Phoenix supervisor.
 """
 	@name __MODULE__
 	use Supervisor
+	require Logger
 
 	### Supervisor Callbacks
 
 	@spec start_link() :: {:ok, pid}
   def start_link() do
-		IO.puts "Starting main supervisor"
+		Logger.debug "Starting main supervisor"
 		{:ok, _pid} = Supervisor.start_link(@name, [], [name: @name])
 	end 
 
