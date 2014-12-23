@@ -25,10 +25,10 @@ end
 
 # API
 
-@spec start_event_stream(atom, %EventStreamDef{}, %User{}) :: {:ok, pid}
+@spec start_event_stream(atom, %EventStreamDef{}, %User{}, %EventStream{}) :: {:ok, pid}
 @doc "Dynamically starts an event stream as agent."
-def start_event_stream(name, event_stream_def, user) do
-	Supervisor.start_child(@name, [name, event_stream_def, user])
+def start_event_stream(name, event_stream_def, user, super_event_stream \\ nil) do
+	Supervisor.start_child(@name, [name, event_stream_def, user, super_event_stream])
 end
 
 end
