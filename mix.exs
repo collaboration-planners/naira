@@ -17,7 +17,8 @@ defmodule Naira.Mixfile do
   # Type `mix help compile.app` for more information
   def application do
     [mod: {Naira, []},
-     applications: [:mnesia, :phoenix, :dbg]]
+     applications: [:mnesia, :phoenix, :dbg]
+    ]
   end
 
   # Specifies your project dependencies

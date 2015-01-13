@@ -118,7 +118,7 @@ A cyclic event report stream based on an event stream definition.
 	# Move to the next stored event report
 	def move_to_next(event_stream = %EventStream{}) do
 		Logger.debug "Move to next -- #{label event_stream}"
-		event_report = EventReport.get_next event_stream.current
+		event_report = peek_after event_stream.current
 		%{event_stream | current: event_report, at_end: peek_after(event_report) === nil}
 	end
 
@@ -166,11 +166,10 @@ A cyclic event report stream based on an event stream definition.
 	# Lazy starting of sub streams (recursive starts of children by supervisor ==> deadlocks)
 	defp get_sub_name(event_stream = %EventStream{}, cursor) do
 		es = Enum.at(event_stream.sub_event_streams, cursor)
-		case es do
-			a when is_atom(a) -> es
-			i when is_integer(i) -> 
-					Logger.debug "Lazily starting event stream from def #{i}"
-					Naira.EventStreamService.start_event_stream(event_stream_def_id: i, user: event_stream.user, super_stream: event_stream)
+		cond do
+			is_atom(es) -> es
+		  is_integer(es) -> 	Logger.debug "Lazily starting event stream from def #{es}"
+					Naira.EventStreamService.start_event_stream(event_stream_def_id: es, user: event_stream.user, super_stream: event_stream)
 		end
   end
 

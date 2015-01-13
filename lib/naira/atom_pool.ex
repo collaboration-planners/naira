@@ -25,6 +25,20 @@ A pool of reusable atoms. Used to minimize the number of dynamically created ato
 		Agent.update(@name, fn state -> release_atom(atom, state) end)
 	end
 
+	@spec used?(atom) :: boolean
+  @doc "Whether an atom is being used"
+	def used?(atom) do
+		%{used: used, unused: unused} = Agent.get(@name, &(&1))
+		atom in used
+  end
+
+  @spec recycled?(atom) :: boolean
+  @doc "Whether an atom is recycled"
+  def recycled?(atom) do
+		%{used: used, unused: unused} = Agent.get(@name, &(&1))
+		atom in unused
+  end
+
 ### PRIVATE
 
 	defp init(initial_pool_size) do
